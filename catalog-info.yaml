@@ -13,7 +13,7 @@ metadata:
     backstage.io/kubernetes-label-selector: app.kubernetes.io/name=crossplane-kubernetes
     terraform/organization: orgName
     terraform/workspaces: workspaceName1,workspaceName2,workspaceName3
-    sonarqube.org/project-key: YOUR_INSTANCE_NAME/YOUR_PROJECT_KEY
+    sonarqube.org/project-key: YOUR_INSTANCE_NAME/YOUR_PROJECT_KEY2
   tags:
     - go
   links:
@@ -28,4 +28,4 @@ metadata:
 spec:
   type: service
   lifecycle: production
-  owner: user:guest
+  owner: hurameco
