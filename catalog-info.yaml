@@ -28,4 +28,4 @@ metadata:
 spec:
   type: service
   lifecycle: production
-  owner: user:guest
+  owner: user:hurameco
