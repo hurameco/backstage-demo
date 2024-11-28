@@ -257,7 +257,7 @@ spec:
         name:
           title: Name
           type: string
-          default: githubTemplate
+          ui:field: githubTemplate
           description: Unique name of your project
         urlParameter:
           title: URL endpoint
