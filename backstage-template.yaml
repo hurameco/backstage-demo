@@ -228,7 +228,7 @@ spec:
           description: URL to clone
         args:
           title: Args
-          type: string
+          type: Array
           description: Arguments to pass to the clone command
 
   steps:
