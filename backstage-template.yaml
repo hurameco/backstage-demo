@@ -228,7 +228,7 @@ spec:
           description: URL to clone
         args:
           title: Args
-          type: array
+          type: string
           description: Arguments to pass to the clone command
 
   steps:
@@ -238,3 +238,14 @@ spec:
       input:
         repoUrl: ${{ parameters.repoUrl }}
         args: ${{ parameters.args }}
+
+--- 
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: my-custom-template
+  title: My Custom Template
+  description: Testing Template
+spec:
+  owner: hurameco
+  type: service
