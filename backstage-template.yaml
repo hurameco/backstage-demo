@@ -267,7 +267,6 @@ spec:
           title: Enable Database
           type: boolean
           default: false
-  ...
   steps:
     - id: fetch-base
       name: Fetch Base
