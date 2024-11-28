@@ -171,3 +171,70 @@ spec:
     links:
     - title: Pull Request
       url: ${{ steps['create-pull-request'].output.remoteUrl }}
+
+---
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: clone-demo
+  title: My custom git clone action
+  description: scaffolder action to clone to the workspace directory
+spec:
+  owner: mdude2314
+  type: service
+
+  parameters:
+    - title: Generic git
+      properties:
+        repoUrl:
+          title: Command
+          type: string
+          description: Git command to run
+        workingDirectory:
+          title: Working Directory
+          type: string
+          description: The working directory within the scaffolder workspace to run the command
+        args:
+          title: Args
+          type: array
+          description: Arguments to pass to the clone command
+
+  steps:
+    - id: git
+      name: git
+      action: git
+      input:
+        command: ${{ parameters.command }} # ex: 'commit' - will make the scaffolder run the `git commit` command
+        workingDirectory: ${{ parameters.workingDirectory }} # ex: './my-working-directory' - will execute the command in the specified directory relative to the scaffolder workspace
+        args: ${{ parameters.args }} # ex: ['-m', 'My commit message'] - will add '-m My commit message' to the arguments passed to the git command
+
+---
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: clone-demo
+  title: My custom git clone action
+  description: scaffolder action to clone to the workspace directory
+spec:
+  owner: mdude2314
+  type: service
+
+  parameters:
+    - title: Clone
+      properties:
+        repoUrl:
+          title: Path
+          type: string
+          description: URL to clone
+        args:
+          title: Args
+          type: array
+          description: Arguments to pass to the clone command
+
+  steps:
+    - id: clone
+      name: Clone
+      action: git:clone
+      input:
+        repoUrl: ${{ parameters.repoUrl }}
+        args: ${{ parameters.args }}
