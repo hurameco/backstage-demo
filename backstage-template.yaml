@@ -243,9 +243,37 @@ spec:
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
-  name: my-custom-template
-  title: My Custom Template
-  description: Testing Template
+  name: Test Template
+  title: Test Action template
+  description: Template to Test
 spec:
   owner: hurameco
   type: service
+
+  parameters:
+    - title: Choose a location
+      required:
+        - repoUrl
+      properties:
+        repoUrl:
+          title: Repository Location
+          type: string
+          ui:field: RepoUrlPicker
+          ui:options:
+            requestUserCredentials:
+              secretsKey: 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
+              additionalScopes:
+                github:
+                  - workflow
+            allowedHosts:
+              - github.com
+  steps:
+    - id: publish
+      name: Publish
+      action: publish:github
+      input:
+        allowedHosts: ['github.com']
+        description: This is ${{ parameters.name }}
+        repoUrl: ${{ parameters.repoUrl }}
+        # here's where the secret can be used
+        token: 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
