@@ -239,6 +239,11 @@ spec:
           title: Repository is Private
           type: boolean
           description: toggle saying if the new repository is private
+        required:
+          - templateName
+          - repoName
+          - repoDescription
+          - repoIsPrivate
   steps:
     - id: Instantiate
       name: Instantiate
