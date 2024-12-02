@@ -212,25 +212,25 @@ spec:
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
-  name: clone-demo
-  title: My custom git clone action
-  description: scaffolder action to clone to the workspace directory
+  name: github-template
+  title: Github Template
+  description: Github plugin that allows creating a repo using a Github Template
 spec:
-  owner: mdude2314
+  owner: hurameco
   type: service
 
   parameters:
-    - title: Clone
+    - title: Select Github Template
       properties:
-        repoUrl:
-          title: Path
+        templateName:
+          title: Template Name
           type: string
-          description: URL to clone
-        args:
-          title: Args
-          type: Array
-          description: Arguments to pass to the clone command
-
+          description: Template Name
+          ui:field: GithubTemplate
+        repoName:
+          title: Repository Name
+          type: string
+          description: Name of the Repository after template usage
   steps:
     - id: clone
       name: Clone
@@ -238,43 +238,3 @@ spec:
       input:
         repoUrl: ${{ parameters.repoUrl }}
         args: ${{ parameters.args }}
-
----
-apiVersion: scaffolder.backstage.io/v1beta3
-kind: Template
-metadata:
-  name: hurameco
-  title: Test Action
-  description: scaffolder v1beta3 template demo
-spec:
-  owner: hurameco
-  type: service
-  parameters:
-    - title: Fill in some steps
-      required:
-        - name
-      properties:
-        name:
-          title: Name
-          type: string
-          ui:field: githubTemplate
-          description: Unique name of your project
-        urlParameter:
-          title: URL endpoint
-          type: string
-          description: URL endpoint at which the component can be reached
-          default: 'https://www.example.com'
-        enabledDB:
-          title: Enable Database
-          type: boolean
-          default: false
-  steps:
-    - id: fetch-base
-      name: Fetch Base
-      action: fetch:template
-      input:
-        url: ./template
-        values:
-          name: ${{ parameters.name }}
-          url: ${{ parameters.urlParameter }}
-          enabledDB: ${{ parameters.enabledDB }}
