@@ -231,10 +231,20 @@ spec:
           title: Repository Name
           type: string
           description: Name of the Repository after template usage
+        repoDescription:
+          title: Repository Description
+          type: string
+          description: Text for the description  of the Repository
+        repoIsPrivate:
+          title: Repository is Private
+          type: boolean
+          description: toggle saying if the new repository is private
   steps:
-    - id: clone
-      name: Clone
-      action: git:clone
+    - id: Instantiate
+      name: Instantiate
+      action: hurameco:create-using-template
       input:
-        repoUrl: ${{ parameters.repoUrl }}
-        args: ${{ parameters.args }}
+        templateName: ${{ parameters.templateName }}
+        repoName: ${{ parameters.repoName }}
+        repoDescription: ${{ parameters.repoDescription}}
+        repoIsPrivate: ${{parameters.repoIsPrivate}}
