@@ -222,11 +222,6 @@ spec:
   parameters:
     - title: Select Github Template
       properties:
-        templateName:
-          title: Template Name
-          type: string
-          description: Template Name
-          ui:field: GithubTemplate
         repoName:
           title: Repository Name
           type: string
@@ -239,17 +234,48 @@ spec:
           title: Repository is Private
           type: boolean
           description: toggle saying if the new repository is private
-      required:
-        - templateName
-        - repoName
-        - repoDescription
-        - repoIsPrivate
+        ownTemplate:
+          title: Use my template
+          type: boolean
+          description: Toggle to signal if the template is ours our from others
+      dependencies:
+        ownTemplate:
+          allOf:
+            - if:
+                properties:
+                  ownTemplate:
+                    const: true
+                required: [ownTemplate]
+              then:  
+                properties:
+                  templateName:
+                    title: Template Name
+                    type: string
+                    description: Template Name
+                    ui:field: GithubTemplate
+            - if:
+                properties:
+                  ownTemplate:
+                    const: false
+                required: [ownTemplate]
+              then:
+                properties:
+                  otherUserName:
+                    title: Username
+                    type: string
+                    description: Username of the template owner
+                  otherUserTemplateName:
+                    title: Template Name
+                    type: string
+                    description: Template Name
+                  
   steps:
     - id: Instantiate
       name: Instantiate
       action: hurameco:create-using-template
       input:
-        templateName: ${{ parameters.templateName }}
+        ownerName: ${{ "hurameco" if parameters.ownTemplate === true else parameters.otherUserName }}
+        templateName: ${{ parameters.templateName if parameters.ownTemplate === true else parameters.otherUserTemplateName }}
         repoName: ${{ parameters.repoName }}
         repoDescription: ${{ parameters.repoDescription}}
         repoIsPrivate: ${{parameters.repoIsPrivate}}
