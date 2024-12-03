@@ -50,7 +50,7 @@ spec:
                     description: Template Name
                 required:
                   - otherUserName
-                  - oterserTemplateName
+                  - otherUserTemplateName
     - title: Configure New Repository
       properties:
         repoName:
