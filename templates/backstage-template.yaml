@@ -1,217 +1,6 @@
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
-  name: crossplane-kubernetes
-  title: Crossplane Kubernetes
-  description: Create and Manage Kubernetes Clusters
-spec:
-  owner: vfarcic/crossplane-kubernetes
-  type: service
-  parameters:
-  - title: Service Selector
-    properties:
-      name:
-        type: string
-        ui:autofocus: true
-      provider:
-        type: string
-        enum:
-        - aws
-        - azure
-        - google
-        default: aws
-      namespace:
-        type: string
-      repository:
-        type: string
-      repositoryUser:
-        type: string
-        default: vfarcic
-    required:
-    - name
-    - provider
-    - namespace
-    - repository
-  - title: Service Definition
-    properties:
-      version:
-        title: General version
-        type: string
-      nodeSize:
-        title: General nodeSize
-        type: string
-        enum:
-        - small
-        - medium
-        - large
-        default: small
-      minNodeCount:
-        title: General minNodeCount
-        type: integer
-        default: 1
-      namespaces:
-        title: General namespaces
-        type: array
-        default:
-        - dev
-        - production
-        items:
-          type: string
-    required:
-    - nodeSize
-  - title: Apps
-    properties:
-      crossplane:
-        type: object
-        properties:
-          enabled:
-            title: Crossplane enabled
-            type: boolean
-            default: false
-        required: []
-      argocd:
-        type: object
-        properties:
-          enabled:
-            title: Argo CD enabled
-            type: boolean
-            default: false
-          host:
-            title: Argo CD host
-            type: string
-            default: acme.com
-          repoURL:
-            title: Argo CD repoURL
-            type: string
-            default: https://github.com/vfarcic/SOMETHING
-          destinationNamespace:
-            title: Argo CD destinationNamespace
-            type: string
-            default: argo-cd
-          sourcePath:
-            title: Argo CD sourcePath
-            type: string
-            default: '.'
-        required: []
-      openfunction:
-        type: object
-        properties:
-          enabled:
-            title: OpenFunction enabled
-            type: boolean
-            default: false
-        required: []
-      dapr:
-        type: object
-        properties:
-          enabled:
-            title: Dapr enabled
-            type: boolean
-            default: false
-        required: []
-      traefik:
-        type: object
-        properties:
-          enabled:
-            title: Traefik enabled
-            type: boolean
-            default: false
-        required: []
-  steps:
-  - id: log-message
-    name: Log Message
-    action: debug:log
-    input:
-      message: Created the manifest for the ${{ parameters.name }} Kubernetes cluster.
-  - id: fetch-template
-    action: fetch:template
-    name: Generate manifest
-    input:
-      url: manifest-templates
-      targetPath: manifests
-      values:
-        name: ${{ parameters.name }}
-        namespace: ${{ parameters.namespace }}
-        provider: ${{ parameters.provider }}
-        version: ${{ parameters.version }}
-        nodeSize: ${{ parameters.nodeSize }}
-        minNodeCount: ${{ parameters.minNodeCount }}
-        namespaces: ${{ parameters.namespaces }}
-        crossplane:
-          enabled: ${{ parameters.crossplane.enabled }}
-        argocd:
-          enabled: ${{ parameters.argocd.enabled }}
-          host: ${{ parameters.argocd.host }}
-          repoURL: ${{ parameters.argocd.repoURL }}
-          destinationNamespace: ${{ parameters.argocd.destinationNamespace }}
-          sourcePath: ${{ parameters.argocd.sourcePath }}
-        openfunction:
-          enabled: ${{ parameters.openfunction.enabled }}
-        dapr:
-          enabled: ${{ parameters.dapr.enabled }}
-        traefik:
-          enabled: ${{ parameters.openfunction.enabled }}
-  - id: rename-manifest
-    action: fs:rename
-    name: Rename files
-    input:
-      files:
-      - from: manifests/cluster-claim.yaml
-        to: manifests/cluster-claim-${{ parameters.name }}.yaml
-  - id: create-pull-request
-    action: publish:github:pull-request
-    name: Create a pull request
-    input:
-      repoUrl: github.com?repo=${{ parameters.repository }}&owner=${{ parameters.repositoryUser }}
-      branchName: cluster-${{ parameters.name }}
-      gitCommitMessage: Kubernetes cluster
-      title: Kubernetes cluster manifest ${{ parameters.name }}
-      description: This pull request creates the cluster-claim-${{ parameters.name }}.yaml Kubernetes cluster manifest
-  output:
-    links:
-    - title: Pull Request
-      url: ${{ steps['create-pull-request'].output.remoteUrl }}
-
----
-apiVersion: scaffolder.backstage.io/v1beta3
-kind: Template
-metadata:
-  name: clone-demo
-  title: My custom git clone action
-  description: scaffolder action to clone to the workspace directory
-spec:
-  owner: mdude2314
-  type: service
-
-  parameters:
-    - title: Generic git
-      properties:
-        repoUrl:
-          title: Command
-          type: string
-          description: Git command to run
-        workingDirectory:
-          title: Working Directory
-          type: string
-          description: The working directory within the scaffolder workspace to run the command
-        args:
-          title: Args
-          type: array
-          description: Arguments to pass to the clone command
-
-  steps:
-    - id: git
-      name: git
-      action: git
-      input:
-        command: ${{ parameters.command }} # ex: 'commit' - will make the scaffolder run the `git commit` command
-        workingDirectory: ${{ parameters.workingDirectory }} # ex: './my-working-directory' - will execute the command in the specified directory relative to the scaffolder workspace
-        args: ${{ parameters.args }} # ex: ['-m', 'My commit message'] - will add '-m My commit message' to the arguments passed to the git command
-
----
-apiVersion: scaffolder.backstage.io/v1beta3
-kind: Template
-metadata:
   name: github-template
   title: Github Template
   description: Github plugin that allows creating a repo using a Github Template
@@ -258,20 +47,24 @@ spec:
                     type: string
                     description: Template Name
     - title: Configure New Repository
-        properties:
-          repoName:
-            title: Repository Name
-            type: string
-            description: Name of the Repository after template usage
-          repoDescription:
-            title: Repository Description
-            type: string
-            description: Text for the description  of the Repository
-          repoIsPrivate:
-            title: Repository is Private
-            type: boolean
-            default: false
-            description: toggle saying if the new repository is private
+      properties:
+        repoName:
+          title: Repository Name
+          type: string
+          description: Name of the Repository after template usage
+        repoDescription:
+          title: Repository Description
+          type: string
+          description: Text for the description  of the Repository
+        repoIsPrivate:
+          title: Repository is Private
+          type: boolean
+          default: false
+          description: toggle saying if the new repository is private
+      required: 
+        - repoName 
+        - repoDescription 
+        - repoIsPrivate
                    
   steps:
     - id: Instantiate
