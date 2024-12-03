@@ -222,19 +222,6 @@ spec:
   parameters:
     - title: Select Github Template
       properties:
-        repoName:
-          title: Repository Name
-          type: string
-          description: Name of the Repository after template usage
-        repoDescription:
-          title: Repository Description
-          type: string
-          description: Text for the description  of the Repository
-        repoIsPrivate:
-          title: Repository is Private
-          type: boolean
-          default: false
-          description: toggle saying if the new repository is private
         ownTemplate:
           title: Use my template
           type: boolean
@@ -270,7 +257,22 @@ spec:
                     title: Template Name
                     type: string
                     description: Template Name
-                  
+    - title: Configure New Repository
+        properties:
+          repoName:
+            title: Repository Name
+            type: string
+            description: Name of the Repository after template usage
+          repoDescription:
+            title: Repository Description
+            type: string
+            description: Text for the description  of the Repository
+          repoIsPrivate:
+            title: Repository is Private
+            type: boolean
+            default: false
+            description: toggle saying if the new repository is private
+                   
   steps:
     - id: Instantiate
       name: Instantiate
