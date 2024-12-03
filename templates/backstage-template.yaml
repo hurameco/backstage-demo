@@ -233,10 +233,12 @@ spec:
         repoIsPrivate:
           title: Repository is Private
           type: boolean
+          default: false
           description: toggle saying if the new repository is private
         ownTemplate:
           title: Use my template
           type: boolean
+          default: true
           description: Toggle to signal if the template is ours our from others
       dependencies:
         ownTemplate:
