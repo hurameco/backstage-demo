@@ -31,6 +31,8 @@ spec:
                     type: string
                     description: Template Name
                     ui:field: GithubTemplate
+                required: 
+                  - templateName
             - if:
                 properties:
                   ownTemplate:
@@ -46,6 +48,9 @@ spec:
                     title: Template Name
                     type: string
                     description: Template Name
+                required:
+                  - otherUserName
+                  - oterserTemplateName
     - title: Configure New Repository
       properties:
         repoName:
