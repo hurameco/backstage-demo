@@ -11,17 +11,17 @@ spec:
     - title: Select main Terraform file
       properties:
         repository:
-          - title: Repository
-            type: string
-            ui:field: GithubRepository
+          title: Repository
+          type: string
+          ui:field: GithubRepository
       required:
         - repository
       dependencies:
         repository:
           properties:
             terraformFile:
-              - title: Terraform file
-                type: string
-                ui:field: GithubRepositoryFile
+              title: Terraform file
+              type: string
+              ui:field: GithubRepositoryFile
 
         

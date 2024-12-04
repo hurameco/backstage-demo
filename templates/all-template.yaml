@@ -1,0 +1,112 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: github-template
+  title: Github Template
+  description: Testing template for creating repositories using Github Templates
+spec:
+  owner: hurameco
+  type: service
+
+  parameters:
+    - title: Select Github Template
+      properties:
+        ownTemplate:
+          title: Use my template
+          type: boolean
+          default: true
+          description: Toggle to signal if the template is ours our from others
+      dependencies:
+        ownTemplate:
+          allOf:
+            - if:
+                properties:
+                  ownTemplate:
+                    const: true
+                required: [ownTemplate]
+              then:  
+                properties:
+                  templateName:
+                    title: Template Name
+                    type: string
+                    description: Template Name
+                    ui:field: GithubTemplate
+                required: 
+                  - templateName
+            - if:
+                properties:
+                  ownTemplate:
+                    const: false
+                required: [ownTemplate]
+              then:
+                properties:
+                  otherUserName:
+                    title: Username
+                    type: string
+                    description: Username of the template owner
+                  otherUserTemplateName:
+                    title: Template Name
+                    type: string
+                    description: Template Name
+                required:
+                  - otherUserName
+                  - otherUserTemplateName
+    - title: Configure New Repository
+      properties:
+        repoName:
+          title: Repository Name
+          type: string
+          description: Name of the Repository after template usage
+        repoDescription:
+          title: Repository Description
+          type: string
+          description: Text for the description  of the Repository
+        repoIsPrivate:
+          title: Repository is Private
+          type: boolean
+          default: false
+          description: toggle saying if the new repository is private
+      required: 
+        - repoName 
+        - repoDescription 
+        - repoIsPrivate
+                   
+  steps:
+    - id: Instantiate
+      name: Instantiate
+      action: hurameco:create-using-template
+      input:
+        ownerName: ${{ "hurameco" if parameters.ownTemplate === true else parameters.otherUserName }}
+        templateName: ${{ parameters.templateName if parameters.ownTemplate === true else parameters.otherUserTemplateName }}
+        repoName: ${{ parameters.repoName }}
+        repoDescription: ${{ parameters.repoDescription}}
+        repoIsPrivate: ${{parameters.repoIsPrivate}}
+
+---
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: terraform-template
+  title: Terraform Template
+  description: Testing Template for Terraform Files
+spec:
+  owner: hurameco
+  type: service
+  parameters:
+    - title: Select main Terraform file
+      properties:
+        repository:
+          title: Repository
+          type: string
+          ui:field: GithubRepository
+      required:
+        - repository
+      dependencies:
+        repository:
+          properties:
+            terraformFile:
+              title: Terraform file
+              type: string
+              ui:field: GithubRepositoryFile
+
+        
