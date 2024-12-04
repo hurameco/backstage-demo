@@ -101,12 +101,11 @@ spec:
           ui:field: GithubRepository
       required:
         - repository
-      dependencies:
-        repository:
-          properties:
-            terraformFile:
-              title: Terraform file
-              type: string
-              ui:field: GithubRepositoryFile
+    - title: Select Terraform File
+      properties:
+        terraformFile:
+          title: Terraform file
+          type: string
+          ui:field: GithubRepositoryFile
 
         
