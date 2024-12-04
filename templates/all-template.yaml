@@ -108,4 +108,9 @@ spec:
           type: string
           ui:field: GithubRepositoryFile
 
+  steps:
+    - id: Instantiate
+      name: Instantiate
+      action: hurameco:create-using-template
+
         
