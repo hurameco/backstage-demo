@@ -3,7 +3,7 @@ kind: Template
 metadata:
   name: github-template
   title: Github Template
-  description: Github plugin that allows creating a repo using a Github Template
+  description: Testing template for creating repositories using Github Templates
 spec:
   owner: hurameco
   type: service

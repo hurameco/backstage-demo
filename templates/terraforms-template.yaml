@@ -1,0 +1,27 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: terraform-template
+  title: Terraform Template
+  description: Testing Template for Terraform Files
+spec:
+  owner: hurameco
+  type: service
+  parameters:
+    - title: Select main Terraform file
+      properties:
+        repository:
+          - title: Repository
+            type: string
+            ui:field: GithubRepository
+      required:
+        - repository
+      dependencies:
+        repository:
+          properties:
+            terraformFile:
+              - title: Terraform file
+                type: string
+                ui:field: GithubRepositoryFile
+
+        
