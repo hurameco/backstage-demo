@@ -1467,3 +1467,7 @@ spec:
           type: array
           items:
             type: string
+  steps:
+    - id: Instantiate
+      name: Instantiate
+      action: hurameco:create-using-template
