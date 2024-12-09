@@ -132,14 +132,15 @@ spec:
   type: service
   parameters:
     - title: EC2 Instance Creation
-      required:
-        - instance_name
-        - ami
-        - instance_type
+
       properties:
         ec2_instance:
           title: EC2 Instance Properties
           type: object
+          required:
+            - instance_name
+            - ami
+            - instance_type
           properties:
             instance_name:
               title: Instance Name

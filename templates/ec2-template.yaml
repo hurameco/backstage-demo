@@ -10,14 +10,15 @@ spec:
   type: service
   parameters:
     - title: EC2 Instance Creation
-      required:
-        - instance_name
-        - ami
-        - instance_type
+
       properties:
         ec2_instance:
           title: EC2 Instance Properties
           type: object
+          required:
+            - instance_name
+            - ami
+            - instance_type
           properties:
             instance_name:
               title: Instance Name
@@ -1377,3 +1378,5 @@ spec:
         - ec2_instance_name: ${{ parameters.ec2_instance }}
         - github_repository: ${{ parameters.github_repository}}
         - github_commit_message: ${{ parameters.github_commit_message}}
+
+
