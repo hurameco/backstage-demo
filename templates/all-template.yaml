@@ -1467,6 +1467,18 @@ spec:
           type: array
           items:
             type: string
+    - title: Select terraform Repo
+      properties:
+        github_repository:
+          title: Github Repository
+          type: string
+          ui:field: GithubRepository
+          description: Name of the repo to add the created EC2 instance
+        github_commit_message:
+          title: Commit Message
+          type: string
+          default: Created EC2 Instance
+          description: Commit message
   steps:
     - id: Instantiate
       name: Instantiate
