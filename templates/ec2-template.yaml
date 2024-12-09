@@ -1375,8 +1375,8 @@ spec:
       name: Commit File
       action: hurameco:github-commit
       input:
-        - ec2_instance_name: ${{ parameters.ec2_instance }}
-        - github_repository: ${{ parameters.github_repository}}
-        - github_commit_message: ${{ parameters.github_commit_message}}
+        ec2_instance_name: ${{ parameters.ec2_instance }}
+        github_repository: ${{ parameters.github_repository}}
+        github_commit_message: ${{ parameters.github_commit_message}}
 
 
