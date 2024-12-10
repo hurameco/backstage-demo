@@ -1,0 +1,47 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: delete-terraform-file
+  title: Delete Terraform File
+  description: Delete a Terraform file from a repository
+  tags: ["recommended"]
+spec:
+  owner: hurameco
+  type: service
+  parameters:
+    - title: Select Repository
+      required:
+        - repository_name
+        - branch
+      properties:
+        repository_name:
+          title: Name of the Repository
+          type: string
+          description: Name of the repository from which the file will be deleted
+          ui:field: GithubRepository
+        repository_branch:
+          title: Branch
+          type: string
+          default: main
+          description: Name of the branch to delete the file from
+    - title: Select File
+      required:
+        - file_name
+      properties:
+        file_name:
+          title: Name of the file
+          type: string
+          description: Name of the file to be deleted
+          ui:field: GithubRepositoryTerraformFile
+
+
+  steps:
+    - id: Delete-File
+      name: Delete File
+      action: hurameco:github-delete-terraform-file
+      input:
+        repo_name: ${{ parameters.repository_name }}
+        repo_branch: ${{ parameters.repository_branch}}
+        file_path: ${{ parameters.file_path}}
+
+
