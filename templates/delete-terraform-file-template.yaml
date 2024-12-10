@@ -12,7 +12,7 @@ spec:
     - title: Select Repository
       required:
         - repository_name
-        - branch
+        - repository_branch
       properties:
         repository_name:
           title: Name of the Repository
@@ -26,9 +26,9 @@ spec:
           description: Name of the branch to delete the file from
     - title: Select File
       required:
-        - file_name
+        - file_path
       properties:
-        file_name:
+        file_path:
           title: Name of the file
           type: string
           description: Name of the file to be deleted
@@ -43,5 +43,3 @@ spec:
         repo_name: ${{ parameters.repository_name }}
         repo_branch: ${{ parameters.repository_branch}}
         file_path: ${{ parameters.file_path}}
-
-

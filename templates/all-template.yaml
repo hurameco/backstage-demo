@@ -1530,9 +1530,9 @@ spec:
           description: Name of the branch to delete the file from
     - title: Select File
       required:
-        - file_name
+        - file_path
       properties:
-        file_name:
+        file_path:
           title: Name of the file
           type: string
           description: Name of the file to be deleted
