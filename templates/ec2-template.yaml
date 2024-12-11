@@ -3,7 +3,7 @@ kind: Template
 metadata:
   name: create-ec2-instance
   title: Create an EC2 Instance
-  description: Create an Instance to deploy your application
+  description: Create an EC2 Instance to deploy your application
   tags: ["recommended"]
 spec:
   owner: hurameco
@@ -919,6 +919,66 @@ spec:
               title: Optional
               type: object
               properties:
+                availability_zone:
+                  title: Availability Zone
+                  type: string
+                  description: AZ to start the instance in.
+                  enum:
+                    - af-south-1
+                    - ap-east-1
+                    - ap-northeast-1
+                    - ap-northeast-2
+                    - ap-northeast-3
+                    - ap-south-1
+                    - ap-south-2
+                    - ap-southeast-1
+                    - ap-southeast-2
+                    - ap-southeast-3
+                    - ap-southeast-4
+                    - ca-central-1
+                    - cn-north-1
+                    - cn-northwest-1
+                    - eu-central-1
+                    - eu-central-2
+                    - eu-north-1
+                    - eu-south-1
+                    - eu-south-2
+                    - eu-west-1
+                    - eu-west-2
+                    - eu-west-3
+                    - me-central-1
+                    - me-south-1
+                    - sa-east-1
+                    - us-east-1
+                    - us-east-2
+                    - us-gov-east-1
+                    - us-gov-west-1
+                    - us-west-1
+                    - us-west-2
+                capacity_reservation_specification:
+                  title: Capacity Reservation Specification
+                  type: object
+                  properties:
+                    capacity_reservation_preferance:
+                      title: Capacity Reservation Preferance
+                      type: string
+                      default: open
+                      description: Indicates the instance's Capacity Reservation preferances. Can be "open" or "none". (Default "open")
+                      enum:
+                        - open
+                        - none 
+                    capacity_reservation_target:
+                      title: Capacity Reservation Target
+                      type: object
+                      properties:
+                        capacity_reservation_id:
+                          title: Capacity Reservation ID
+                          type: string
+                          description: ID of the Capacity Reservation in which to run the instance.
+                        capacity_reservation_resource_group_arn:
+                          title: Capacity Reservation Resource Group ARN
+                          type: string
+                          description: ARN of the Capacity Reservation resource group in which to run the instance.
                 cpu_options:
                   title: CPU Options
                   type: object
@@ -1373,7 +1433,7 @@ spec:
   steps:
     - id: Commit-File
       name: Commit File
-      action: hurameco:github-commit
+      action: hurameco:github-ec2-commit
       input:
         ec2_instance: ${{ parameters.ec2_instance }}
         github_repository: ${{ parameters.github_repository}}

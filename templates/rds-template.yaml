@@ -1,0 +1,542 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: create-rds-instance
+  title: Create an RDS Instance
+  description: Create an RDS Instance to deploy your application
+  tags: ["recommended"]
+spec:
+  owner: hurameco
+  type: service
+  parameters:
+    - title: RDS Instance Creation
+      required:
+        - rds_instance_name
+      properties:
+        rds_instance_name:
+          title: RDS Instance Name
+          type: string
+          description: Name to give this RDS Instance
+        rds_instance:
+          title: RDS Instance
+          type: object
+          required:
+            - allocated_space
+            - db_cluster_instance_class
+            - engine
+            - master_username
+            - master_password
+          properties:
+            allocated_space:
+              title: Allocated_space
+              type: integer
+              description: The amount of storage in gibibytes (GiB) to allocate to each DB instance in the Multi-AZ DB cluster.
+            db_cluster_instance_class:
+              title: DB Cluster Instance Class
+              type: string
+              description: The compute and memory capacity of each DB instance in the Multi-AZ DB cluster, for example db.m6g.xlarge. Not all DB instance classes are available in all AWS Regions, or for all database engines. For the full list of DB instance classes and availability for your engine, see DB instance class in the Amazon RDS User Guide.
+              enum:
+                - db.m4.10xlarge
+                - db.m4.16xlarge
+                - db.m4.2xlarge
+                - db.m4.4xlarge
+                - db.m4.large
+                - db.m4.xlarge
+                - db.m5.12xlarge
+                - db.m5.16xlarge
+                - db.m5.24xlarge
+                - db.m5.2xlarge
+                - db.m5.4xlarge
+                - db.m5.8xlarge
+                - db.m5.large
+                - db.m5.xlarge
+                - db.m5d.12xlarge
+                - db.m5d.16xlarge
+                - db.m5d.24xlarge
+                - db.m5d.2xlarge
+                - db.m5d.4xlarge
+                - db.m5d.8xlarge
+                - db.m5d.large
+                - db.m5d.xlarge
+                - db.m6g.12xlarge
+                - db.m6g.16xlarge
+                - db.m6g.2xlarge
+                - db.m6g.4xlarge
+                - db.m6g.8xlarge
+                - db.m6g.large
+                - db.m6g.xlarge
+                - db.r4.16xlarge
+                - db.r4.2xlarge
+                - db.r4.4xlarge
+                - db.r4.8xlarge
+                - db.r4.large
+                - db.r4.xlarge
+                - db.r5b.large
+                - db.r5d.12xlarge
+                - db.r5d.16xlarge
+                - db.r5d.24xlarge
+                - db.r5d.2xlarge
+                - db.r5d.4xlarge
+                - db.r5d.8xlarge
+                - db.r5d.large
+                - db.r5d.xlarge
+                - db.r5g.12xlarge
+                - db.r5g.16xlarge
+                - db.r5g.24xlarge
+                - db.r5g.2xlarge
+                - db.r5g.4xlarge
+                - db.r5g.8xlarge
+                - db.r5g.xlarge
+                - db.r6g.12xlarge
+                - db.r6g.16xlarge
+                - db.r6g.2xlarge
+                - db.r6g.4xlarge
+                - db.r6g.8xlarge
+                - db.r6g.large
+                - db.r6g.xlarge
+                - db.t2.2xlarge
+                - db.t2.large
+                - db.t2.medium
+                - db.t2.micro
+                - db.t2.small
+                - db.t2.xlarge
+                - db.t3.2xlarge
+                - db.t3.large
+                - db.t3.medium
+                - db.t3.micro
+                - db.t3.small
+                - db.t3.xlarge
+                - db.t4g.2xlarge
+                - db.t4g.large
+                - db.t4g.medium
+                - db.t4g.micro
+                - db.t4g.small
+                - db.t4g.xlarge
+                - db.x1.32xlarge
+                - db.x16xlarge
+                - db.x1e.16xlarge
+                - db.x1e.2xlarge
+                - db.x1e.32xlarge
+                - db.x1e.4xlarge
+                - db.x1e.8xlarge
+                - db.x1e.xlarge
+                - db.x2g.12xlarge
+                - db.x2g.16xlarge
+                - db.x2g.2xlarge
+                - db.x2g.4xlarge
+                - db.x2g.8xlarge
+                - db.x2g.large
+                - db.x2g.medium
+                - db.x2g.xlarge
+                - db.z1d.12xlarge
+                - db.z1d.2xlarge
+                - db.z1d.3xlarge
+                - db.z1d.6xlarge
+                - db.z1d.large
+                - db.z1d.xlarge
+            engine:
+              title: Engine
+              type: string
+              description: Name of the database engine to be used for this DB cluster. Valid Values:- aurora-mysql, aurora-postgresql, mysql, postgres. (Note that mysql and postgres are Multi-AZ RDS clusters).
+              enum:
+                - aurora-mysql
+                - aurora-postgresql
+                - mysql
+                - postgres
+            master_username:
+              title: Master Username
+              type: string
+              description: Username for the master DB user. Please refer to the RDS Naming Constraints. This argument does not support in-place updates and cannot be changed during a restore from snapshot.
+            master_password:
+              title: Master Password
+              type: string
+              description: Password for the master DB user. Note that this may show up in logs, and it will be stored in the state file. Please refer to the RDS Naming Constraints. Cannot be set if manage_master_user_password is set to true.
+            allow_major_version_upgrade:
+              title: Allow Major Version Upgrade
+              type: boolean
+              default: false
+              description: Enable to allow major engine version upgrades when changing engine versions. default to false.
+            apply_immediately:
+              title: Apply Immediately
+              type: boolean
+              default: false
+              description: Specifies whether any cluster modifications are applied immediately, or during the next maintenance window. Default is false. See Amazon RDS Documentation for more information.
+            availability_zone:
+              title: Availability Zone
+              type: string
+              description: AZ to start the instance in.
+              enum:
+                - af-south-1
+                - ap-east-1
+                - ap-northeast-1
+                - ap-northeast-2
+                - ap-northeast-3
+                - ap-south-1
+                - ap-south-2
+                - ap-southeast-1
+                - ap-southeast-2
+                - ap-southeast-3
+                - ap-southeast-4
+                - ca-central-1
+                - cn-north-1
+                - cn-northwest-1
+                - eu-central-1
+                - eu-central-2
+                - eu-north-1
+                - eu-south-1
+                - eu-south-2
+                - eu-west-1
+                - eu-west-2
+                - eu-west-3
+                - me-central-1
+                - me-south-1
+                - sa-east-1
+                - us-east-1
+                - us-east-2
+                - us-gov-east-1
+                - us-gov-west-1
+                - us-west-1
+                - us-west-2
+                -
+            backtrack_window:
+              title: Backtrack Window
+              type: integer
+              description: Target backtrack window, in seconds. Only available for aurora and aurora-mysql engines currently. To disable backtracking, set this value to 0. default to 0. Must be between 0 and 259200 (72 hours)
+              pattern: "([0-9]|[1-9][0-9]{1,4}|1[0-9]{5}|2[0-4][0-9]{4}|25[0-8][0-9]{3}|259[01][0-9]{2}|259200)"
+            backup_retention_period:
+              title: Backup Retention Period
+              type: integer
+              default: 1
+              description: Days to retain backups for. Default 1
+            ca_certificate_identifier:
+              title: CA Certificate Identifier
+              type: string
+              description: The CA certificate identifier to use for the DB cluster's server certificate.
+            cluster_identifier_prefix:
+              title: Cluster Identifier Prefix
+              type: string
+              description: Creates a unique cluster identifier beginning with the specified prefix. Conflicts with cluster_identifier.
+            cluster_identifier:
+              title: Cluster Identifier
+              type: string
+              description: The cluster identifier. If omitted, Terraform will assign a random, unique identifier.
+            copy_tags_to_snapshot:
+              title: Copy Tags to Snapshot
+              type: boolean
+              default: false
+              description: Copy all Cluster tags to snapshots. Default is false.
+            database_name:
+              title: Database Name
+              type: string
+              description: Name for an automatically created database on cluster creation. There are different naming restrictions per database engine:- RDS Naming Constraints
+            db_cluster_parameter_group_name:
+              title: DB Cluster Parameter Group Name
+              type: string
+              description: A cluster parameter group to associate with the cluster.
+            db_instance_parameter_group_name:
+              title: DB Instance Parameter Group Name
+              type: string
+              description: Instance parameter group to associate with all instances of the DB cluster. The db_instance_parameter_group_name parameter is only valid in combination with the allow_major_version_upgrade parameter.
+            db_subnet_group_name:
+              title: DB Subnet Group Name
+              type: string
+              description: DB subnet group to associate with this DB cluster. NOTE:- This must match the db_subnet_group_name specified on every aws_rds_cluster_instance in the cluster.
+            db_system_id:
+              title: DB System ID
+              type: string
+              description: For use with RDS Custom.
+            delete_automated_backups:
+              title: Delete Automated Backups
+              type: boolean
+              default: true
+              description: Specifies whether to remove automated backups immediately after the DB cluster is deleted. Default is true.
+            deletion_protection:
+              title: Deletion Protection
+              type: boolean
+              default: true
+              description: If the DB cluster should have deletion protection enabled. The database can't be deleted when this value is set to true. The default is false.
+            domain:
+              title: Domain
+              type: string
+              description: The ID of the Directory Service Active Directory domain to create the cluster in.
+            domain_iam_role_name:
+              title: Domain IAM Role Name
+              type: string
+              description: The name of the IAM role to be used when making API calls to the Directory Service.
+            enable_global_write_forwarding:
+              title: Enable Global Write Forwarding
+              type: string
+              description: Whether cluster should forward writes to an associated global cluster. Applied to secondary clusters to enable them to forward writes to an aws_rds_global_cluster's primary cluster. See the User Guide for Aurora for more information.
+              enum:
+                - enabled
+                - disabled
+            enable_http_endpoint:
+              title: Enable HTTP Endpoint
+              type: string
+              description: Enable HTTP endpoint (data API). Only valid for some combinations of engine_mode, engine and engine_version and only available in some regions. See the Region and version availability section of the documentation. This option also does not work with any of these options specified:- snapshot_identifier, replication_source_identifier, s3_import.
+              enum:
+                - enabled
+                - disabled
+            enable_local_write_forwarding:
+              title: Enable Local Write Forwarding
+              type: string
+              description: Whether read replicas can forward write operations to the writer DB instance in the DB cluster. By default, write operations aren't allowed on reader DB instances.. See the User Guide for Aurora for more information. NOTE:- Local write forwarding requires Aurora MySQL version 3.04 or higher.
+              enum:
+                - enabled
+                - disabled
+            enabled_cloudwatch_logs_exports:
+              title: Enabled Cloudwatch Log Exports
+              type: string
+              description: Set of log types to export to cloudwatch. If omitted, no logs will be exported. The following log types are supported:- audit, error, general, slowquery, postgresql (PostgreSQL).
+              enum:
+                - audit
+                - error
+                - general
+                - slowquery
+                - postgresql
+            engine_mode:
+              title: Engine Mode
+              type: string
+              default: provisioned
+              description: Database engine mode. Valid values:- global (only valid for Aurora MySQL 1.21 and earlier), parallelquery, provisioned, serverless. default to:- provisioned. See the RDS User Guide for limitations when using serverless.
+              enum:
+                - parallelquery
+                - provisioned
+                - serverless
+            engine_lifecyce_support:
+              title: Engine Lifecycle Support
+              type: string
+              default: open-source-rds-extended-support
+              description: The life cycle type for this DB instance. This setting is valid for cluster types Aurora DB clusters and Multi-AZ DB clusters. Valid values are open-source-rds-extended-support, open-source-rds-extended-support-disabled. Default value is open-source-rds-extended-support. [Using Amazon RDS Extended Support]:- https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/extended-support.html
+              enum:
+                - open-source-rds-extended-support
+                - open-source-rds-extended-support-disabled
+            engine_version:
+              title: Engine Version
+              type: string
+              description: Database engine version. Updating this argument results in an outage. See the Aurora MySQL and Aurora Postgres documentation for your configured engine to determine this value, or by running aws rds describe-db-engine-versions. For example with Aurora MySQL 2, a potential value for this argument is 5.7.mysql_aurora.2.03.2. The value can contain a partial version where supported by the API. The actual engine version used is returned in the attribute engine_version_actual, , see Attribute Reference below.
+            final_snapshot_identifier:
+              title: Final Snapshot Identifier
+              type: string
+              description: Name of your final DB snapshot when this DB cluster is deleted. If omitted, no final snapshot will be made.
+            global_cluster_identifier:
+              title: Global Cluster Identifier
+              type: string
+              description: Global cluster identifier specified on aws_rds_global_cluster.
+            iam_database_authentication_enabled:
+              title: IAM Database Authentication Enabled
+              type: string
+              description: Specifies whether or not mappings of AWS Identity and Access Management (IAM) accounts to database accounts is enabled. Please see AWS Documentation for availability and limitations.
+            iam_roles:
+              title: IAM Roles
+              type: array
+              description: List of ARNs for the IAM roles to associate to the RDS Cluster.
+              items:
+                title: Role
+                type: string
+            iops:
+              title: IOPS
+              type: number
+              description: Amount of Provisioned IOPS (input/output operations per second) to be initially allocated for each DB instance in the Multi-AZ DB cluster. For information about valid Iops values, see Amazon RDS Provisioned IOPS storage to improve performance in the Amazon RDS User Guide. (This setting is required to create a Multi-AZ DB cluster). Must be a multiple between .5 and 50 of the storage amount for the DB cluster.
+            kms_key_id:
+              title: KMS Key ID
+              type: string
+              description: ARN for the KMS encryption key. When specifying kms_key_id, storage_encrypted needs to be set to true.
+            manage_master_user_password:
+              title: Manage Master User Password
+              type: string
+              description: Set to true to allow RDS to manage the master user password in Secrets Manager. Cannot be set if master_password is provided.
+            master_user_secret_kms_key_id:
+              title: Master User Secret KMS Key ID
+              type: string
+              description: Amazon Web Services KMS key identifier is the key ARN, key ID, alias ARN, or alias name for the KMS key. To use a KMS key in a different Amazon Web Services account, specify the key ARN or alias ARN. If not specified, the default KMS key for your Amazon Web Services account is used.
+            network_type:
+              title: Network Type
+              type: string
+              description: Network type of the cluster. Valid values:- IPV4, DUAL
+              enum:
+                - IPV4
+                - DUAL
+            performance_insights_enable:
+              title: Performance Insights Enabled
+              type: string
+              description: Valid only for Non-Aurora Multi-AZ DB Clusters. Enables Performance Insights for the RDS Cluster
+              enum:
+                - enabled
+                - disabled
+            performance_insights_kms_key_id:
+              title: Performance Insights KMS Key ID
+              type: string
+              description: Valid only for Non-Aurora Multi-AZ DB Clusters. Specifies the KMS Key ID to encrypt Performance Insights data. If not specified, the default RDS KMS key will be used (aws/rds).
+            performance_insights_retention_period:
+              title: Performance Insights Retention Period
+              type: string
+              default: "7"
+              description: Valid only for Non-Aurora Multi-AZ DB Clusters. Specifies the amount of time to retain performance insights data for. default to 7 days if Performance Insights are enabled. Valid values are 7, month * 31 (where month is a number of months from 1-23), and 731. See here for more information on retention periods.
+            port:
+              title: Port
+              type: integer
+              description: Port on which the DB accepts connections.
+            preferred_backup_window:
+              title: Preferred Backup Window
+              type: string
+              description: Daily time range during which automated backups are created if automated backups are enabled using the BackupRetentionPeriod parameter.Time in UTC. Default:- A 30-minute window selected at random from an 8-hour block of time per region, e.g. 04:00-09:00.
+            preferred_maintenance_window:
+              title: Preferred Maintenance Window
+              type: string
+              description: Weekly time range during which system maintenance can occur, in (UTC) e.g., wed:04:00-wed:04:30
+            replication_source_identifier:
+              title: Replication Source Identifier
+              type: string
+              description: ARN of a source DB cluster or DB instance if this DB cluster is to be created as a Read Replica. Note:- Removing this attribute after creation will promote the read replica to a standalone cluster. If DB Cluster is part of a Global Cluster, use the lifecycle configuration block ignore_changes argument to prevent Terraform from showing differences for this argument instead of configuring this value.
+            restore_to_point_in_time:
+              title: Restore to Point in Time
+              type: object
+              description: Nested attribute for point in time restore. More details below.
+              properties:
+                source_cluster_identifier:
+                  title: Source Cluster Identifier
+                  type: string
+                  description: Identifier of the source database cluster from which to restore. When restoring from a cluster in another AWS account, the identifier is the ARN of that cluster.
+                source_cluster_resource_id:
+                  title: Source Cluster Resource ID
+                  type: string
+                  description: Cluster resource ID of the source database cluster from which to restore. To be used for restoring a deleted cluster in the same account which still has a retained automatic backup available.
+                restore_type:
+                  title: Restore Type
+                  type: string
+                  description: Type of restore to be performed. Valid options are full-copy (default) and copy-on-write.
+                  enum:
+                    - full-copy
+                    - copy-on-write
+                use_latest_restorable_time:
+                  title: Use Latest Restorable Time
+                  type: boolean
+                  description: Set to true to restore the database cluster to the latest restorable backup time. default to false. Conflicts with restore_to_time.
+                restore_to_time:
+                  title: Restore to Time
+                  type: string
+                  description: Date and time in UTC format to restore the database cluster to. Conflicts with use_latest_restorable_time.
+            scaling_configuration:
+              title: Scaling Configuration
+              type: object
+              properties:
+                auto_pause:
+                  title: Auto Pause
+                  type: boolean
+                  default: true
+                  description: Whether to enable automatic pause. A DB cluster can be paused only when it's idle (it has no connections). If a DB cluster is paused for more than seven days, the DB cluster might be backed up with a snapshot. In this case, the DB cluster is restored when there is a request to connect to it. default to true.
+                max_capacity:
+                  title: Max Capacity
+                  type: integer
+                  default: 16
+                  description: Maximum capacity for an Aurora DB cluster in serverless DB engine mode. The maximum capacity must be greater than or equal to the minimum capacity. Valid Aurora MySQL capacity values are 1, 2, 4, 8, 16, 32, 64, 128, 256. Valid Aurora PostgreSQL capacity values are (2, 4, 8, 16, 32, 64, 192, and 384). default to 16.
+                min_capacity:
+                  title: Min Capacity
+                  type: integer
+                  default: 1
+                  description: Minimum capacity for an Aurora DB cluster in serverless DB engine mode. The minimum capacity must be lesser than or equal to the maximum capacity. Valid Aurora MySQL capacity values are 1, 2, 4, 8, 16, 32, 64, 128, 256. Valid Aurora PostgreSQL capacity values are (2, 4, 8, 16, 32, 64, 192, and 384). default to 1.
+                seconds_before_timeout:
+                  title: Seconds Before Timeout
+                  type: integer
+                  default: 300
+                  description: Amount of time, in seconds, that Aurora Serverless v1 tries to find a scaling point to perform seamless scaling before enforcing the timeout action. Valid values are 60 through 600. default to 300.
+                seconds_until_auto_pause:
+                  title: Seconds until Auto Pause
+                  type: integer
+                  default: 300
+                  description: Time, in seconds, before an Aurora DB cluster in serverless mode is paused. Valid values are 300 through 86400. default to 300.
+                timeout_action:
+                  title: Timeout Action
+                  type: string
+                  default: RollbackCapacityChange
+                  description: Action to take when the timeout is reached. Valid values:- ForceApplyCapacityChange, RollbackCapacityChange. default to RollbackCapacityChange. See documentation.
+                  enum:
+                    - ForceApplyCapacityChange
+                    - RollbackCapacityChange
+            serverlessv2_scaling_configuration:
+              title: Serverless V2 Scaling Configuration
+              type: object
+              properties:
+                max_capacity:
+                  title: Max Capacity
+                  type: number
+                  description: Maximum capacity for an Aurora DB cluster in provisioned DB engine mode. The maximum capacity must be greater than or equal to the minimum capacity. Valid capacity values are in a range of 0 up to 256 in steps of 0.5.
+                min_capacity:
+                  title: Min Capacity
+                  type: number
+                  description: Minimum capacity for an Aurora DB cluster in provisioned DB engine mode. The minimum capacity must be lesser than or equal to the maximum capacity. Valid capacity values are in a range of 0 up to 256 in steps of 0.5.
+            skip_final_snapshot:
+              title: Skip Final Snapshot
+              type: boolean
+              default: false
+              description: Determines whether a final DB snapshot is created before the DB cluster is deleted. If true is specified, no DB snapshot is created. If false is specified, a DB snapshot is created before the DB cluster is deleted, using the value from final_snapshot_identifier. Default is false.
+            snapshot_identifier:
+              title: Snapshot Identifier
+              type: string
+              description: Specifies whether or not to create this cluster from a snapshot. You can use either the name or ARN when specifying a DB cluster snapshot, or the ARN when specifying a DB snapshot. Conflicts with global_cluster_identifier. Clusters cannot be restored from snapshot and joined to an existing global cluster in a single operation. See the AWS documentation or the Global Cluster Restored From Snapshot example for instructions on building a global cluster starting with a snapshot.
+            source_region:
+              title: Source Region
+              type: string
+              description: The source region for an encrypted replica DB cluster.
+            storage_encryption:
+              title: Storage Encryption
+              type: boolean
+              default: false
+              description: Specifies whether the DB cluster is encrypted. The default is false for provisioned engine_mode and true for serverless engine_mode. When restoring an unencrypted snapshot_identifier, the kms_key_id argument must be provided to encrypt the restored cluster. Terraform will only perform drift detection if a configuration value is provided.
+            storage_type:
+              title: Storage Type
+              type: string
+              default: ""
+              description: Specifies the storage type to be associated with the DB cluster. For Aurora DB clusters, storage_type modifications can be done in-place. For Multi-AZ DB Clusters, the iops argument must also be set. Valid values are:- "", aurora-iopt1 (Aurora DB Clusters); io1, io2 (Multi-AZ DB Clusters). Default:- "" (Aurora DB Clusters); io1 (Multi-AZ DB Clusters).
+              enum:
+                - ""
+                - aurora-iopt1
+                - io1
+                - io2
+            tags:
+              title: tags
+              type: array
+              description: A map of tags to assign to the DB cluster. If configured with a provider default_tags configuration block present, tags with matching keys will overwrite those defined at the provider-level.
+              items:
+                type: object
+                properties:
+                  key:
+                    title: Key
+                    type: string
+                  value:
+                    title: Value
+                    type: string
+            vpc_security_group_ids:
+              title: VPC Security Group IDs
+              type: array
+              description: List of VPC security groups to associate with the Cluster
+              items:
+                title: ID
+                type: string
+
+    - title: Select terraform Repo
+      properties:
+        github_repository:
+          title: Github Repository
+          type: string
+          ui:field: GithubRepository
+          description: Name of the repo to add the created RDS instance
+        github_commit_message:
+          title: Commit Message
+          type: string
+          default: Created RDS Instance
+          description: Commit message
+      required:
+        - github_repository
+        - github_commit_message
+
+  steps:
+    - id: Commit-File
+      name: Commit File
+      action: hurameco:github-rds-commit
+      input:
+        rds_instance_name: ${{ parameters.rds_instance_name}}
+        rds_instance: ${{ parameters.rds_instance }}
+        github_repository: ${{ parameters.github_repository}}
+        github_commit_message: ${{ parameters.github_commit_message}}
