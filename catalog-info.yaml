@@ -1,9 +1,9 @@
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: crossplane-kubernetes
-  title: Crossplane Kubernetes
-  description: Silly description of Crossplane Kubernetes
+  name: bckstage-templates
+  title: Backstage Templates
+  description: Repository with all Backstage Templates 
   annotations:
     github.com/project-slug: hurameco/backstage-demo
     gocd.org/pipelines: 'GitHub Actions Demo'
@@ -28,4 +28,4 @@ metadata:
 spec:
   type: service
   lifecycle: production
-  owner: guests
+  owner: hurameco
