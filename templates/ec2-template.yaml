@@ -10,20 +10,18 @@ spec:
   type: service
   parameters:
     - title: EC2 Instance Creation
-
       properties:
+        ecs_instance_name:
+          title: EC2 Instance Name
+          type: string
+          description: Name of the EC2 Instance
         ec2_instance:
           title: EC2 Instance Properties
           type: object
           required:
-            - instance_name
             - ami
             - instance_type
           properties:
-            instance_name:
-              title: Instance Name
-              type: string
-              description: Name of the instance being created.
             ami:
               title: ID of the Amazon Machine Image
               type: string
@@ -915,505 +913,501 @@ spec:
                 - z1d.large
                 - z1d.metal
                 - z1d.xlarge
-            optional:
-              title: Optional
+        availability_zone:
+          title: Availability Zone
+          type: string
+          description: AZ to start the instance in.
+          enum:
+            - af-south-1
+            - ap-east-1
+            - ap-northeast-1
+            - ap-northeast-2
+            - ap-northeast-3
+            - ap-south-1
+            - ap-south-2
+            - ap-southeast-1
+            - ap-southeast-2
+            - ap-southeast-3
+            - ap-southeast-4
+            - ca-central-1
+            - cn-north-1
+            - cn-northwest-1
+            - eu-central-1
+            - eu-central-2
+            - eu-north-1
+            - eu-south-1
+            - eu-south-2
+            - eu-west-1
+            - eu-west-2
+            - eu-west-3
+            - me-central-1
+            - me-south-1
+            - sa-east-1
+            - us-east-1
+            - us-east-2
+            - us-gov-east-1
+            - us-gov-west-1
+            - us-west-1
+            - us-west-2
+        capacity_reservation_specification:
+          title: Capacity Reservation Specification
+          type: object
+          properties:
+            capacity_reservation_preferance:
+              title: Capacity Reservation Preferance
+              type: string
+              default: open
+              description: Indicates the instance's Capacity Reservation preferances. Can be "open" or "none". (Default "open")
+              enum:
+                - open
+                - none 
+            capacity_reservation_target:
+              title: Capacity Reservation Target
               type: object
               properties:
-                availability_zone:
-                  title: Availability Zone
+                capacity_reservation_id:
+                  title: Capacity Reservation ID
                   type: string
-                  description: AZ to start the instance in.
+                  description: ID of the Capacity Reservation in which to run the instance.
+                capacity_reservation_resource_group_arn:
+                  title: Capacity Reservation Resource Group ARN
+                  type: string
+                  description: ARN of the Capacity Reservation resource group in which to run the instance.
+        cpu_options:
+          title: CPU Options
+          type: object
+          properties:
+            core_count:
+              title: Core Count
+              type: number
+              default: 1
+              #pattern: "^[0-9]*$"
+              description: Sets the number of CPU cores for an instance. This option is only supported on creation of instance type that support CPU Options CPU Cores and Threads Per CPU Core Per Instance Type - specifying this option for unsupported instance types will return an error from the EC2 API.
+            threads_per_core:
+              title: Threads per Core
+              type: number
+              default: 2
+              #pattern: "^[0-9]*$"
+              description: (Has no effect unless core_count is also set) If set to 1, hyperthreading is disabled on the launched instance. Defaults to 2 if not set.
+            amd_sev_snp:
+              title: Enable SEV-SNP
+              type: string
+              default: disabled
+              enum:
+                - enabled
+                - disabled
+        credit_specification:
+          title: Credit Specification
+          type: object
+          properties:
+            cpu_credits:
+              title: CPU Credits
+              type: string
+              default: standard
+              description: Credit option for CPU usage. Valid values include standard or unlimited. T3 instances are launched as unlimited by default. T2 instances are launched as standard by default.
+              enum:
+                - standard
+                - unlimited
+        disable_api_stop:
+          title: Disable API Stop
+          type: boolean
+          default: false
+          description: If true, enables EC2 Instance Stop Protection.
+        ebs_block_device:
+          title: EBS Block Device
+          type: object
+          properties:
+            delete_on_termination:
+              title: Delete on Termination
+              type: boolean
+              default: true
+              description: Whether the volume should be destroyed on instance termination. Defaults to true
+            encrypted:
+              title: Encrypted
+              type: boolean
+              default: false
+              description: Whether to enable volume encryption. Defaults to false. Must be configured to perform drift detection.
+            iops:
+              title: IOPS
+              type: string
+              description: Amount of provisioned IOPS. Only valid for volume_type of io1, io2 or gp3
+              enum:
+                - io1
+                - io2
+                - gp3
+            kms_key_id:
+              title: KMS Key ID
+              type: string
+              description: Amazon Resource Name (ARN) of the KMS Key to use when encrypting the volume. Must be configured to perform drift detection.
+            tags:
+              title: Tags
+              type: string
+              description: Map of tags to assign to the device
+            throughput:
+              title: Throughput (MiB/s)
+              type: number
+              description: Throughput to provision for a volume in mebibytes per second (MiB/s). This is only valid for volume_type of gp3
+            volume_size:
+              title: Volume Size (BiB)
+              type: number
+              description: Size of the volume in gibibytes (GiB).
+            volume_type:
+              title: Volume Type
+              type: string
+              description: Type of volume. Valid values include standard, gp2, gp3, io1, io2, sc1, or st1. Defaults to the volume type that the AMI uses.
+              enum:
+                - gp2
+                - gp3
+                - io1
+                - io2
+                - sc1
+                - st1
+        ebs_optimized:
+          title: EBS Optimized
+          type: boolean
+          default: false
+          description: If true, the launched EC2 instance will be EBS-optimized. Note that if this is not set on an instance type that is optimized by default then this will show as disabled but if the instance type is optimized by default then there is no need to set this and there is no effect to disabling it. See the EBS Optimized section of the AWS User Guide for more information.
+        enclave_options:
+          title: Enclave Options
+          type: boolean
+          default: false
+          description: Enable Nitro Enclaves on launched instances. See Enclave Options below for more details.
+        ephemeral_block_device:
+          title: EBS Block Device
+          type: object
+          properties:
+            delete_on_termination:
+              title: Delete on Termination
+              type: boolean
+              default: true
+              description: Whether the volume should be destroyed on instance termination. Defaults to true
+            encrypted:
+              title: Encrypted
+              type: boolean
+              default: false
+              description: Whether to enable volume encryption. Defaults to false. Must be configured to perform drift detection.
+            iops:
+              title: IOPS
+              type: string
+              description: Amount of provisioned IOPS. Only valid for volume_type of io1, io2 or gp3
+              enum:
+                - io1
+                - io2
+                - gp3
+            kms_key_id:
+              title: KMS Key ID
+              type: string
+              description: Amazon Resource Name (ARN) of the KMS Key to use when encrypting the volume. Must be configured to perform drift detection.
+            tags:
+              title: Tags
+              type: string
+              description: Map of tags to assign to the device
+            throughput:
+              title: Throughput (MiB/s)
+              type: number
+              description: Throughput to provision for a volume in mebibytes per second (MiB/s). This is only valid for volume_type of gp3
+            volume_size:
+              title: Volume Size (BiB)
+              type: number
+              description: Size of the volume in gibibytes (GiB).
+            volume_type:
+              title: Volume Type
+              type: string
+              description: Type of volume. Valid values include standard, gp2, gp3, io1, io2, sc1, or st1. Defaults to the volume type that the AMI uses.
+              enum:
+                - gp2
+                - gp3
+                - io1
+                - io2
+                - sc1
+                - st1
+        get_password_device:
+          title: Get device password
+          type: boolean
+          default: false
+          description: If true, wait for password data to become available and retrieve it. Useful for getting the administrator password for instances running Microsoft Windows. The password data is exported to the password_data attribute. See GetPasswordData for more information.
+        hibernation:
+          title: Hibernation
+          type: boolean
+          default: false
+          description: If true, the launched EC2 instance will support hibernation.
+        host_id:
+          title: Host ID
+          type: string
+          description: ID of a dedicated host that the instance will be assigned to. Use when an instance is to be launched on a specific dedicated host.
+        host_resource_group_arn:
+          title: Host Resource Group Arn
+          type: string
+          description: ARN of the host resource group in which to launch the instances. If you specify an ARN, omit the tenancy parameter or set it to host.
+        iam_instance_profile:
+          title: IAM Instance Profile
+          type: string
+          description: IAM Instance Profile to launch the instance with. Specified as the name of the Instance Profile. Ensure your credentials have the correct permission to assign the instance profile according to the EC2 documentation, notably iam:PassRole.
+        instance_initiated_shutdown_behavior:
+          title: Shutdown Behavior
+          type: string
+          default: stop
+          description: Shutdown behavior for the instance. Amazon defaults this to stop for EBS-backed instances and terminate for instance-store instances. Cannot be set on instance-store instances. See Shutdown Behavior for more information.
+          enum:
+            - stop
+            - terminate
+        instance_market_options:
+          title: Instance Market Options
+          type: object
+          properties:
+            market_type:
+              title: Market Type
+              type: string
+              default: spot
+              description: Type of market for the instance. Valid values are spot and capacity-block. Defaults to spot. Required if spot_options is specified.
+              enum:
+                - spot
+                - capacity-block
+            spot_options:
+              title: Spot Options
+              type: object
+              properties:
+                instance_interruption_behavior:
+                  title: Instance Interruption Behavior
+                  type: string
+                  default: terminate
                   enum:
-                    - af-south-1
-                    - ap-east-1
-                    - ap-northeast-1
-                    - ap-northeast-2
-                    - ap-northeast-3
-                    - ap-south-1
-                    - ap-south-2
-                    - ap-southeast-1
-                    - ap-southeast-2
-                    - ap-southeast-3
-                    - ap-southeast-4
-                    - ca-central-1
-                    - cn-north-1
-                    - cn-northwest-1
-                    - eu-central-1
-                    - eu-central-2
-                    - eu-north-1
-                    - eu-south-1
-                    - eu-south-2
-                    - eu-west-1
-                    - eu-west-2
-                    - eu-west-3
-                    - me-central-1
-                    - me-south-1
-                    - sa-east-1
-                    - us-east-1
-                    - us-east-2
-                    - us-gov-east-1
-                    - us-gov-west-1
-                    - us-west-1
-                    - us-west-2
-                capacity_reservation_specification:
-                  title: Capacity Reservation Specification
-                  type: object
-                  properties:
-                    capacity_reservation_preferance:
-                      title: Capacity Reservation Preferance
-                      type: string
-                      default: open
-                      description: Indicates the instance's Capacity Reservation preferances. Can be "open" or "none". (Default "open")
-                      enum:
-                        - open
-                        - none 
-                    capacity_reservation_target:
-                      title: Capacity Reservation Target
-                      type: object
-                      properties:
-                        capacity_reservation_id:
-                          title: Capacity Reservation ID
-                          type: string
-                          description: ID of the Capacity Reservation in which to run the instance.
-                        capacity_reservation_resource_group_arn:
-                          title: Capacity Reservation Resource Group ARN
-                          type: string
-                          description: ARN of the Capacity Reservation resource group in which to run the instance.
-                cpu_options:
-                  title: CPU Options
-                  type: object
-                  properties:
-                    core_count:
-                      title: Core Count
-                      type: number
-                      default: 1
-                      #pattern: "^[0-9]*$"
-                      description: Sets the number of CPU cores for an instance. This option is only supported on creation of instance type that support CPU Options CPU Cores and Threads Per CPU Core Per Instance Type - specifying this option for unsupported instance types will return an error from the EC2 API.
-                    threads_per_core:
-                      title: Threads per Core
-                      type: number
-                      default: 2
-                      #pattern: "^[0-9]*$"
-                      description: (Has no effect unless core_count is also set) If set to 1, hyperthreading is disabled on the launched instance. Defaults to 2 if not set.
-                    amd_sev_snp:
-                      title: Enable SEV-SNP
-                      type: string
-                      default: disabled
-                      enum:
-                        - enabled
-                        - disabled
-                credit_specification:
-                  title: Credit Specification
-                  type: object
-                  properties:
-                    cpu_credits:
-                      title: CPU Credits
-                      type: string
-                      default: standard
-                      description: Credit option for CPU usage. Valid values include standard or unlimited. T3 instances are launched as unlimited by default. T2 instances are launched as standard by default.
-                      enum:
-                        - standard
-                        - unlimited
-                disable_api_stop:
-                  title: Disable API Stop
-                  type: boolean
-                  default: false
-                  description: If true, enables EC2 Instance Stop Protection.
-                ebs_block_device:
-                  title: EBS Block Device
-                  type: object
-                  properties:
-                    delete_on_termination:
-                      title: Delete on Termination
-                      type: boolean
-                      default: true
-                      description: Whether the volume should be destroyed on instance termination. Defaults to true
-                    encrypted:
-                      title: Encrypted
-                      type: boolean
-                      default: false
-                      description: Whether to enable volume encryption. Defaults to false. Must be configured to perform drift detection.
-                    iops:
-                      title: IOPS
-                      type: string
-                      description: Amount of provisioned IOPS. Only valid for volume_type of io1, io2 or gp3
-                      enum:
-                        - io1
-                        - io2
-                        - gp3
-                    kms_key_id:
-                      title: KMS Key ID
-                      type: string
-                      description: Amazon Resource Name (ARN) of the KMS Key to use when encrypting the volume. Must be configured to perform drift detection.
-                    tags:
-                      title: Tags
-                      type: string
-                      description: Map of tags to assign to the device
-                    throughput:
-                      title: Throughput (MiB/s)
-                      type: number
-                      description: Throughput to provision for a volume in mebibytes per second (MiB/s). This is only valid for volume_type of gp3
-                    volume_size:
-                      title: Volume Size (BiB)
-                      type: number
-                      description: Size of the volume in gibibytes (GiB).
-                    volume_type:
-                      title: Volume Type
-                      type: string
-                      description: Type of volume. Valid values include standard, gp2, gp3, io1, io2, sc1, or st1. Defaults to the volume type that the AMI uses.
-                      enum:
-                        - gp2
-                        - gp3
-                        - io1
-                        - io2
-                        - sc1
-                        - st1
-                ebs_optimized:
-                  title: EBS Optimized
-                  type: boolean
-                  default: false
-                  description: If true, the launched EC2 instance will be EBS-optimized. Note that if this is not set on an instance type that is optimized by default then this will show as disabled but if the instance type is optimized by default then there is no need to set this and there is no effect to disabling it. See the EBS Optimized section of the AWS User Guide for more information.
-                enclave_options:
-                  title: Enclave Options
-                  type: boolean
-                  default: false
-                  description: Enable Nitro Enclaves on launched instances. See Enclave Options below for more details.
-                ephemeral_block_device:
-                  title: EBS Block Device
-                  type: object
-                  properties:
-                    delete_on_termination:
-                      title: Delete on Termination
-                      type: boolean
-                      default: true
-                      description: Whether the volume should be destroyed on instance termination. Defaults to true
-                    encrypted:
-                      title: Encrypted
-                      type: boolean
-                      default: false
-                      description: Whether to enable volume encryption. Defaults to false. Must be configured to perform drift detection.
-                    iops:
-                      title: IOPS
-                      type: string
-                      description: Amount of provisioned IOPS. Only valid for volume_type of io1, io2 or gp3
-                      enum:
-                        - io1
-                        - io2
-                        - gp3
-                    kms_key_id:
-                      title: KMS Key ID
-                      type: string
-                      description: Amazon Resource Name (ARN) of the KMS Key to use when encrypting the volume. Must be configured to perform drift detection.
-                    tags:
-                      title: Tags
-                      type: string
-                      description: Map of tags to assign to the device
-                    throughput:
-                      title: Throughput (MiB/s)
-                      type: number
-                      description: Throughput to provision for a volume in mebibytes per second (MiB/s). This is only valid for volume_type of gp3
-                    volume_size:
-                      title: Volume Size (BiB)
-                      type: number
-                      description: Size of the volume in gibibytes (GiB).
-                    volume_type:
-                      title: Volume Type
-                      type: string
-                      description: Type of volume. Valid values include standard, gp2, gp3, io1, io2, sc1, or st1. Defaults to the volume type that the AMI uses.
-                      enum:
-                        - gp2
-                        - gp3
-                        - io1
-                        - io2
-                        - sc1
-                        - st1
-                get_password_device:
-                  title: Get device password
-                  type: boolean
-                  default: false
-                  description: If true, wait for password data to become available and retrieve it. Useful for getting the administrator password for instances running Microsoft Windows. The password data is exported to the password_data attribute. See GetPasswordData for more information.
-                hibernation:
-                  title: Hibernation
-                  type: boolean
-                  default: false
-                  description: If true, the launched EC2 instance will support hibernation.
-                host_id:
-                  title: Host ID
-                  type: string
-                  description: ID of a dedicated host that the instance will be assigned to. Use when an instance is to be launched on a specific dedicated host.
-                host_resource_group_arn:
-                  title: Host Resource Group Arn
-                  type: string
-                  description: ARN of the host resource group in which to launch the instances. If you specify an ARN, omit the tenancy parameter or set it to host.
-                iam_instance_profile:
-                  title: IAM Instance Profile
-                  type: string
-                  description: IAM Instance Profile to launch the instance with. Specified as the name of the Instance Profile. Ensure your credentials have the correct permission to assign the instance profile according to the EC2 documentation, notably iam:PassRole.
-                instance_initiated_shutdown_behavior:
-                  title: Shutdown Behavior
-                  type: string
-                  default: stop
-                  description: Shutdown behavior for the instance. Amazon defaults this to stop for EBS-backed instances and terminate for instance-store instances. Cannot be set on instance-store instances. See Shutdown Behavior for more information.
-                  enum:
+                    - hibernate
                     - stop
                     - terminate
-                instance_market_options:
-                  title: Instance Market Options
-                  type: object
-                  properties:
-                    market_type:
-                      title: Market Type
-                      type: string
-                      default: spot
-                      description: Type of market for the instance. Valid values are spot and capacity-block. Defaults to spot. Required if spot_options is specified.
-                      enum:
-                        - spot
-                        - capacity-block
-                    spot_options:
-                      title: Spot Options
-                      type: object
-                      properties:
-                        instance_interruption_behavior:
-                          title: Instance Interruption Behavior
-                          type: string
-                          default: terminate
-                          enum:
-                            - hibernate
-                            - stop
-                            - terminate
-                        max_price:
-                          title: Max Price
-                          type: number
-                          description: The maximum hourly price that you're willing to pay for a Spot Instance.
-                        spot_isntance_type:
-                          title: Spot Instance Type
-                          type: string
-                          default: one-time
-                          description: The Spot Instance request type. Valid values include one-time, persistent. Persistent Spot Instance requests are only supported when the instance interruption behavior is either hibernate or stop. The default is one-time.
-                          enum:
-                            - one-time
-                            - persistent
-                        valid_until:
-                          title: Valid until
-                          type: string
-                          description: The end date of the request, in UTC format (YYYY-MM-DDTHH:MM:SSZ). Supported only for persistent requests.
-                ipv6_addresses:
-                  title: IPv6 Addresses
-                  type: array
-                  description: Number of IPv6 addresses to associate with the primary network interface. Amazon EC2 chooses the IPv6 addresses from the range of your subnet.
-                  items:
-                    title: IPv6 Address
-                    type: string
-                    pattern: '(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))'
-                key_name:
-                  title: Key Name
+                max_price:
+                  title: Max Price
+                  type: number
+                  description: The maximum hourly price that you're willing to pay for a Spot Instance.
+                spot_isntance_type:
+                  title: Spot Instance Type
                   type: string
-                  description: Key name of the Key Pair to use for the instance; which can be managed using the aws_key_pair resource.
-                maintenance_options:
-                  title: Maintenance Option
-                  type: object
-                  properties:
-                    auto_recovery:
-                      title: Auto Recovery
-                      type: string
-                      description: Automatic recovery behavior of the Instance. Can be "default" or "disabled". See Recover your instance for more details.
-                      enum:
-                        - default
-                        - disabled
-                metadata_options:
-                  title: Metadata Options
-                  type: object
-                  properties:
-                    http_endpoint:
-                      title: HTTP Endpoint
-                      type: string
-                      defaults: enabled
-                      description: Whether the metadata service is available. Valid values include enabled or disabled. Defaults to enabled.
-                      enum:
-                        - enabled
-                        - disabled
-                    http_protocol_ipv6:
-                      title: HTTP Protocol IPv6
-                      type: string
-                      default: disabled
-                      description: Whether the IPv6 endpoint for the instance metadata service is enabled. Defaults to disabled.
-                      enum:
-                        - enabled
-                        - disabled
-                    http_put_response_hop_limit:
-                      title: HTTP PUT Response Hop Limit
-                      type: integer
-                      default: 1
-                      description: Desired HTTP PUT response hop limit for instance metadata requests. The larger the number, the further instance metadata requests can travel. Valid values are integer from 1 to 64. Defaults to 1.
-                    http_tokens:
-                      title: HTTP Tokens
-                      type: string
-                      description: Whether or not the metadata service requires session tokens, also referred to as Instance Metadata Service Version 2 (IMDSv2). Valid values include optional or required.
-                      enum:
-                        - optional
-                        - required
-                    instance_metadata_tags:
-                      title: Metadata Tags
-                      type: string
-                      default: disabled
-                      description: Enables or disables access to instance tags from the instance metadata service. Valid values include enabled or disabled. Defaults to disabled.
-                      enum:
-                        - enabled
-                        - disabled
-                monitoring:
-                  title: Monitoring
-                  type: boolean
-                  default: false
-                  description: If true, the launched EC2 instance will have detailed monitoring enabled. (Available since v0.6.0)
-                network_interface:
-                  title: Network Interface
-                  type: object
-                  items:
-                    delete_on_termination:
-                      title: Delete on termination
-                      type: boolean
-                      default: false
-                      description: Whether or not to delete the network interface on instance termination. Defaults to false. Currently, the only valid value is false, as this is only supported when creating new network interfaces when launching an instance.
-                    device_index:
-                      title: Device Index
-                      type: integer
-                      description: Integer index of the network interface attachment. Limited by instance type.
-                    network_card_index:
-                      title: Network Card Index
-                      type: integer
-                      default: 0
-                      description: Integer index of the network card. Limited by instance type. The default index is 0.
-                    network_interface_id:
-                      title: Network Interface ID
-                      type: string
-                      descrition: ID of the network interface to attach.
-                placement_group:
-                  title: Placement Group
-                  type: string
-                  description: Placement Group to start the instance in.
-                placement_partition_group:
-                  title: Placement Partition Group
-                  type: integer
-                  description: Number of the partition the instance is in. Valid only if the aws_placement_group resource's strategy argument is set to "partition".
-                private_dns_name_options:
-                  title: Private DNS Name Options
-                  type: object
-                  properties:
-                    enable_resource_name_dns_aaaa_record:
-                      title: DNS AAAA Record
-                      type: string
-                      description: Indicates whether to respond to DNS queries for instance hostnames with DNS AAAA records.
-                    enable_resource_name_dns_a_record:
-                      title: DNS A Record
-                      type: string
-                      description: Indicates whether to respond to DNS queries for instance hostnames with DNS A records.
-                    hostname_type:
-                      title: Hostname Type
-                      type: string
-                      description: "Type of hostname for Amazon EC2 instances. For IPv4 only subnets, an instance DNS name must be based on the instance IPv4 address. For IPv6 native subnets, an instance DNS name must be based on the instance ID. For dual-stack subnets, you can specify whether DNS names use the instance IPv4 address or the instance ID. Valid values: ip-name and resource-name."
-                      enum:
-                        - ip-name
-                        - resource-name
-                private_ip:
-                  title: Private IP
-                  type: string
-                  description: Private IP address to associate with the instance in a VPC.
-                  pattern: '^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$'
-                root_block_device:
-                  title: Root Block Devices
-                  type: object
-                  properties:
-                    delete_on_termination:
-                      title: Delete on Termination
-                      type: boolean
-                      default: true
-                      description: Whether the volume should be destroyed on instance termination. Defaults to true
-                    encrypted:
-                      title: Encrypted
-                      type: boolean
-                      default: false
-                      description: Whether to enable volume encryption. Defaults to false. Must be configured to perform drift detection.
-                    iops:
-                      title: IOPS
-                      type: string
-                      description: Amount of provisioned IOPS. Only valid for volume_type of io1, io2 or gp3
-                      enum:
-                        - io1
-                        - io2
-                        - gp3
-                    kms_key_id:
-                      title: KMS Key ID
-                      type: string
-                      description: Amazon Resource Name (ARN) of the KMS Key to use when encrypting the volume. Must be configured to perform drift detection.
-                    tags:
-                      title: Tags
-                      type: string
-                      description: Map of tags to assign to the device
-                    throughput:
-                      title: Throughput (MiB/s)
-                      type: number
-                      description: Throughput to provision for a volume in mebibytes per second (MiB/s). This is only valid for volume_type of gp3
-                    volume_size:
-                      title: Volume Size (BiB)
-                      type: number
-                      description: Size of the volume in gibibytes (GiB).
-                    volume_type:
-                      title: Volume Type
-                      type: string
-                      description: Type of volume. Valid values include standard, gp2, gp3, io1, io2, sc1, or st1. Defaults to the volume type that the AMI uses.
-                      enum:
-                        - gp2
-                        - gp3
-                        - io1
-                        - io2
-                        - sc1
-                        - st1
-                secondary_private_ips:
-                  title: Secondary Private IPs
-                  type: array
-                  items:
-                    title: IPv4 IP
-                    type: string
-                    pattern: '^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$'
-                security_groups:
-                  title: Security Groups
-                  type: array
-                  items:
-                    type: string
-                source_dest_check:
-                  title: Source Destination Check
-                  type: boolean
-                  default: true
-                  description: Controls if traffic is routed to the instance when the destination address does not match the instance. Used for NAT or VPNs. Defaults true.
-                subnet_id:
-                  title: Subnet ID
-                  type: string
-                  description: VPC Subnet ID to launch in.
-                tags:
-                  title: Tags
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      key:
-                        title: Key
-                        type: string
-                      value:
-                        title: Value
-                        type: string
-                tenancy:
-                  title: Tenancy
-                  type: string
-                  description: Tenancy of the instance (if the instance is running in a VPC). An instance with a tenancy of dedicated runs on single-tenant hardware. The host tenancy is not supported for the import-instance command. Valid values are default, dedicated, and host.
+                  default: one-time
+                  description: The Spot Instance request type. Valid values include one-time, persistent. Persistent Spot Instance requests are only supported when the instance interruption behavior is either hibernate or stop. The default is one-time.
                   enum:
-                    - default
-                    - dedicated
-                    - host
-                vpc_security_group_ip:
-                  title: VPC Security Group ID
-                  type: array
-                  items:
-                    type: string
+                    - one-time
+                    - persistent
+                valid_until:
+                  title: Valid until
+                  type: string
+                  description: The end date of the request, in UTC format (YYYY-MM-DDTHH:MM:SSZ). Supported only for persistent requests.
+        ipv6_addresses:
+          title: IPv6 Addresses
+          type: array
+          description: Number of IPv6 addresses to associate with the primary network interface. Amazon EC2 chooses the IPv6 addresses from the range of your subnet.
+          items:
+            title: IPv6 Address
+            type: string
+            pattern: '(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))'
+        key_name:
+          title: Key Name
+          type: string
+          description: Key name of the Key Pair to use for the instance; which can be managed using the aws_key_pair resource.
+        maintenance_options:
+          title: Maintenance Option
+          type: object
+          properties:
+            auto_recovery:
+              title: Auto Recovery
+              type: string
+              description: Automatic recovery behavior of the Instance. Can be "default" or "disabled". See Recover your instance for more details.
+              enum:
+                - default
+                - disabled
+        metadata_options:
+          title: Metadata Options
+          type: object
+          properties:
+            http_endpoint:
+              title: HTTP Endpoint
+              type: string
+              defaults: enabled
+              description: Whether the metadata service is available. Valid values include enabled or disabled. Defaults to enabled.
+              enum:
+                - enabled
+                - disabled
+            http_protocol_ipv6:
+              title: HTTP Protocol IPv6
+              type: string
+              default: disabled
+              description: Whether the IPv6 endpoint for the instance metadata service is enabled. Defaults to disabled.
+              enum:
+                - enabled
+                - disabled
+            http_put_response_hop_limit:
+              title: HTTP PUT Response Hop Limit
+              type: integer
+              default: 1
+              description: Desired HTTP PUT response hop limit for instance metadata requests. The larger the number, the further instance metadata requests can travel. Valid values are integer from 1 to 64. Defaults to 1.
+            http_tokens:
+              title: HTTP Tokens
+              type: string
+              description: Whether or not the metadata service requires session tokens, also referred to as Instance Metadata Service Version 2 (IMDSv2). Valid values include optional or required.
+              enum:
+                - optional
+                - required
+            instance_metadata_tags:
+              title: Metadata Tags
+              type: string
+              default: disabled
+              description: Enables or disables access to instance tags from the instance metadata service. Valid values include enabled or disabled. Defaults to disabled.
+              enum:
+                - enabled
+                - disabled
+        monitoring:
+          title: Monitoring
+          type: boolean
+          default: false
+          description: If true, the launched EC2 instance will have detailed monitoring enabled. (Available since v0.6.0)
+        network_interface:
+          title: Network Interface
+          type: object
+          items:
+            delete_on_termination:
+              title: Delete on termination
+              type: boolean
+              default: false
+              description: Whether or not to delete the network interface on instance termination. Defaults to false. Currently, the only valid value is false, as this is only supported when creating new network interfaces when launching an instance.
+            device_index:
+              title: Device Index
+              type: integer
+              description: Integer index of the network interface attachment. Limited by instance type.
+            network_card_index:
+              title: Network Card Index
+              type: integer
+              default: 0
+              description: Integer index of the network card. Limited by instance type. The default index is 0.
+            network_interface_id:
+              title: Network Interface ID
+              type: string
+              descrition: ID of the network interface to attach.
+        placement_group:
+          title: Placement Group
+          type: string
+          description: Placement Group to start the instance in.
+        placement_partition_group:
+          title: Placement Partition Group
+          type: integer
+          description: Number of the partition the instance is in. Valid only if the aws_placement_group resource's strategy argument is set to "partition".
+        private_dns_name_options:
+          title: Private DNS Name Options
+          type: object
+          properties:
+            enable_resource_name_dns_aaaa_record:
+              title: DNS AAAA Record
+              type: string
+              description: Indicates whether to respond to DNS queries for instance hostnames with DNS AAAA records.
+            enable_resource_name_dns_a_record:
+              title: DNS A Record
+              type: string
+              description: Indicates whether to respond to DNS queries for instance hostnames with DNS A records.
+            hostname_type:
+              title: Hostname Type
+              type: string
+              description: "Type of hostname for Amazon EC2 instances. For IPv4 only subnets, an instance DNS name must be based on the instance IPv4 address. For IPv6 native subnets, an instance DNS name must be based on the instance ID. For dual-stack subnets, you can specify whether DNS names use the instance IPv4 address or the instance ID. Valid values: ip-name and resource-name."
+              enum:
+                - ip-name
+                - resource-name
+        private_ip:
+          title: Private IP
+          type: string
+          description: Private IP address to associate with the instance in a VPC.
+          pattern: '^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$'
+        root_block_device:
+          title: Root Block Devices
+          type: object
+          properties:
+            delete_on_termination:
+              title: Delete on Termination
+              type: boolean
+              default: true
+              description: Whether the volume should be destroyed on instance termination. Defaults to true
+            encrypted:
+              title: Encrypted
+              type: boolean
+              default: false
+              description: Whether to enable volume encryption. Defaults to false. Must be configured to perform drift detection.
+            iops:
+              title: IOPS
+              type: string
+              description: Amount of provisioned IOPS. Only valid for volume_type of io1, io2 or gp3
+              enum:
+                - io1
+                - io2
+                - gp3
+            kms_key_id:
+              title: KMS Key ID
+              type: string
+              description: Amazon Resource Name (ARN) of the KMS Key to use when encrypting the volume. Must be configured to perform drift detection.
+            tags:
+              title: Tags
+              type: string
+              description: Map of tags to assign to the device
+            throughput:
+              title: Throughput (MiB/s)
+              type: number
+              description: Throughput to provision for a volume in mebibytes per second (MiB/s). This is only valid for volume_type of gp3
+            volume_size:
+              title: Volume Size (BiB)
+              type: number
+              description: Size of the volume in gibibytes (GiB).
+            volume_type:
+              title: Volume Type
+              type: string
+              description: Type of volume. Valid values include standard, gp2, gp3, io1, io2, sc1, or st1. Defaults to the volume type that the AMI uses.
+              enum:
+                - gp2
+                - gp3
+                - io1
+                - io2
+                - sc1
+                - st1
+        secondary_private_ips:
+          title: Secondary Private IPs
+          type: array
+          items:
+            title: IPv4 IP
+            type: string
+            pattern: '^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$'
+        security_groups:
+          title: Security Groups
+          type: array
+          items:
+            type: string
+        source_dest_check:
+          title: Source Destination Check
+          type: boolean
+          default: true
+          description: Controls if traffic is routed to the instance when the destination address does not match the instance. Used for NAT or VPNs. Defaults true.
+        subnet_id:
+          title: Subnet ID
+          type: string
+          description: VPC Subnet ID to launch in.
+        tags:
+          title: Tags
+          type: array
+          items:
+            type: object
+            properties:
+              key:
+                title: Key
+                type: string
+              value:
+                title: Value
+                type: string
+        tenancy:
+          title: Tenancy
+          type: string
+          description: Tenancy of the instance (if the instance is running in a VPC). An instance with a tenancy of dedicated runs on single-tenant hardware. The host tenancy is not supported for the import-instance command. Valid values are default, dedicated, and host.
+          enum:
+            - default
+            - dedicated
+            - host
+        vpc_security_group_ip:
+          title: VPC Security Group ID
+          type: array
+          items:
+            type: string
     - title: Select terraform Repo
       properties:
         github_repository:
