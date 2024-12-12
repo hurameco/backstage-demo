@@ -2157,8 +2157,8 @@ spec:
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
-  name: create-ec2-instance
-  title: Create an EC2 Instance
+  name: create-ec2-module-instance
+  title: Create an EC2 Module
   description: Create an EC2 Instance to deploy your application
   tags: ["recommended"]
 spec:
@@ -2172,7 +2172,7 @@ spec:
           type: string
           description: Name of the EC2 Instance
         ec2_instance:
-          title: EC2 Instance Properties
+          title: EC2 Module Properties
           type: object
           required:
             - source
