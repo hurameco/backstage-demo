@@ -344,7 +344,7 @@ spec:
               description: ARN for the KMS encryption key. When specifying kms_key_id, storage_encrypted needs to be set to true.
             manage_master_user_password:
               title: Manage Master User Password
-              type: string
+              type: boolean
               description: Set to true to allow RDS to manage the master user password in Secrets Manager. Cannot be set if master_password is provided.
             master_user_secret_kms_key_id:
               title: Master User Secret KMS Key ID
