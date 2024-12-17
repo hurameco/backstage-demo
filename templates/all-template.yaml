@@ -4158,7 +4158,6 @@ spec:
     - title: Select Repository
       required:
         - repository_name
-        - repository_branch
       properties:
         repository_name:
           title: Name of the Repository
