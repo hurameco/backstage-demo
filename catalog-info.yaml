@@ -1,0 +1,65 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: bckstage-templates
+  title: Backstage Templates
+  description: Repository with all Backstage Templates 
+  annotations:
+    github.com/project-slug: hurameco/backstage-demo
+    gocd.org/pipelines: 'GitHub Actions Demo'
+    backstage.io/techdocs-ref: dir:. 
+    backstage.io/kubernetes-id: dot
+    backstage.io/kubernetes-namespace: a-team
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/name=crossplane-kubernetes
+    terraform/organization: orgName
+    terraform/workspaces: workspaceName1,workspaceName2,workspaceName3
+    sonarqube.org/project-key: YOUR_INSTANCE_NAME/YOUR_PROJECT_KEY
+  tags:
+    - go
+  links:
+    - url: https://youtube.com/@devopstoolkit
+      title: DevOps Toolkit YouTube
+      icon: dashboard
+      type: Website
+    - url: https://devopstoolkit.live/
+      title: DevOps Toolkit Posts
+      icon: dashboard
+      type: Website
+spec:
+  type: service
+  lifecycle: production
+  owner: hurameco
+
+  --- 
+
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: bckstage-templates-alternative
+  title: Backstage Templates Copy
+  description: Copy of Repository with all Backstage Templates 
+  annotations:
+    github.com/project-slug: hurameco/backstage-demo
+    gocd.org/pipelines: 'GitHub Actions Demo'
+    backstage.io/techdocs-ref: dir:. 
+    backstage.io/kubernetes-id: dot
+    backstage.io/kubernetes-namespace: a-team
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/name=crossplane-kubernetes
+    terraform/organization: orgName
+    terraform/workspaces: workspaceName1,workspaceName2,workspaceName3
+    sonarqube.org/project-key: YOUR_INSTANCE_NAME/YOUR_PROJECT_KEY
+  tags:
+    - go
+  links:
+    - url: https://youtube.com/@devopstoolkit
+      title: DevOps Toolkit YouTube
+      icon: dashboard
+      type: Website
+    - url: https://devopstoolkit.live/
+      title: DevOps Toolkit Posts
+      icon: dashboard
+      type: Website
+spec:
+  type: service
+  lifecycle: production
+  owner: hurameco
