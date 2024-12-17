@@ -1,0 +1,46 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: create-dynamic-terraform-module
+  title: Create a Dynamic Terraform Module
+  description: Create a Dynamic Terraform Module
+  tags: ["recommended"]
+spec:
+  owner: hurameco
+  type: service
+  parameters:
+    - title: Select Repository
+      required:
+        - repository_name
+        - repository_branch
+      properties:
+        repository_name:
+          title: Name of the Repository
+          type: string
+          description: Name of the repository from which the file
+          ui:field: GithubRepository
+    - title: Select File
+      required:
+        - file_path
+      properties:
+        file_path:
+          title: Name of the file
+          type: string
+          description: Name of the file to be deleted
+          ui:field: GithubRepositoryTerraformFile
+    - title: Variables
+      properties:
+        variables:
+          title: Variables
+          type: object
+          ui:field: TerraformVariable
+
+  steps:
+    - id: Commit-File
+      name: Commit File
+      action: hurameco:github-rds-module-commit
+      input:
+        rds_instance_name: ${{ parameters.rds_instance_name}}
+        rds_instance: ${{ parameters.rds_instance }}
+        github_repository: ${{ parameters.github_repository}}
+        github_commit_message: ${{ parameters.github_commit_message}}

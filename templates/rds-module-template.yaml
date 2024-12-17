@@ -1,15 +1,15 @@
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
-  name: create-rds-instance
-  title: Create an RDS Instance
-  description: Create an RDS Instance to deploy your application
+  name: create-rds-module
+  title: Create an RDS Module
+  description: Create an RDS Module to deploy your application
   tags: ["recommended"]
 spec:
   owner: hurameco
   type: service
   parameters:
-    - title: RDS Instance Creation
+    - title: RDS Module Creation
       required:
         - rds_instance_name
       properties:
@@ -21,12 +21,18 @@ spec:
           title: RDS Instance
           type: object
           required:
+            - source
             - allocated_space
             - db_cluster_instance_class
             - engine
             - master_username
             - master_password
           properties:
+            source:
+              title: Module Source Location
+              type: string
+              description: Location of the main module on Github
+              ui:field: GithubRepository
             allocated_space:
               title: Allocated_space
               type: integer
@@ -534,7 +540,7 @@ spec:
   steps:
     - id: Commit-File
       name: Commit File
-      action: hurameco:github-rds-commit
+      action: hurameco:github-rds-module-commit
       input:
         rds_instance_name: ${{ parameters.rds_instance_name}}
         rds_instance: ${{ parameters.rds_instance }}
