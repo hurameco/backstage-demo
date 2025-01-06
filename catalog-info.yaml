@@ -61,4 +61,4 @@ metadata:
 spec:
   type: service
   lifecycle: production
-  owner: hurameco
+  owner: user:hurameco
